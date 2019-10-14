@@ -30,8 +30,6 @@
 #include "MarlinConfig.h"
 
 
-#include "dogm_bitmaps_LulzBot.h"
-
 #if ENABLED(SHOW_BOOTSCREEN)
 
   //#define START_BMPHIGH // Costs 399 bytes more flash

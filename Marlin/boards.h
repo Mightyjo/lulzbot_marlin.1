@@ -154,7 +154,6 @@
 #define BOARD_BRAINWAVE_PRO     85    // Brainwave Pro (AT90USB1286)
 #define BOARD_SAV_MKI           83    // SAV Mk-I (AT90USB1286)
 #define BOARD_TEENSY2           84    // Teensy++2.0 (AT90USB1286) - CLI compile: HARDWARE_MOTHERBOARD=84  make
-#define BOARD_EINSYRAMBO        304  // Einsy-Rambo
 #define BOARD_5DPRINT           88    // 5DPrint D8 Driver Board
 
 #define MB(board) (defined(BOARD_##board) && MOTHERBOARD==BOARD_##board)

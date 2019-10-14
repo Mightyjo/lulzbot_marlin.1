@@ -116,9 +116,6 @@ tags
 *.dSYM/
 *.su
 
-# Test files
-*.pyc
-
 # PlatformIO files/dirs
 .pio*
 .pioenvs

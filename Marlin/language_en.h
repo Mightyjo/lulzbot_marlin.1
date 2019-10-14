@@ -843,12 +843,6 @@
 #ifndef MSG_COOLING
   #define MSG_COOLING                         _UxGT("Cooling...")
 #endif
-#ifndef MSG_COOLING && defined(LULZBOT_COOLING_MESSAGES)
-  #define MSG_COOLING                         _UxGT("Cooling...")
-#endif
-#ifndef MSG_COOLING_COMPLETE && defined(LULZBOT_COOLING_MESSAGES)
-  #define MSG_COOLING_COMPLETE                _UxGT("Cooling done.")
-#endif
 #ifndef MSG_BED_HEATING
   #define MSG_BED_HEATING                     _UxGT("Bed heating...")
 #endif
@@ -892,7 +886,7 @@
   #define MSG_DELTA_RADIUS                    _UxGT("Radius")
 #endif
 #ifndef MSG_INFO_MENU
-  #define MSG_INFO_MENU                       _UxGT("About Firmware")
+  #define MSG_INFO_MENU                       _UxGT("About Printer")
 #endif
 #ifndef MSG_INFO_PRINTER_MENU
   #define MSG_INFO_PRINTER_MENU               _UxGT("Printer Info")

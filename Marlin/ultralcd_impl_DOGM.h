@@ -280,7 +280,13 @@ void lcd_printPGM_utf(const char *str, uint8_t n=LCD_WIDTH) {
 
 #if ENABLED(SHOW_BOOTSCREEN)
 
-  #if ENABLED(SHOW_CUSTOM_BOOTSCREEN)
+  #ifdef LULZBOT_CUSTOM_BOOTSCREEN
+    void lcd_custom_bootscreen() {
+      LULZBOT_CUSTOM_BOOTSCREEN();
+      safe_delay(CUSTOM_BOOTSCREEN_TIMEOUT);
+    }
+
+  #elif ENABLED(SHOW_CUSTOM_BOOTSCREEN)
 
     void lcd_custom_bootscreen() {
       constexpr u8g_uint_t left = (LCD_PIXEL_WIDTH  - (CUSTOM_BOOTSCREEN_BMPWIDTH)) / 2,
@@ -429,12 +435,6 @@ void lcd_implementation_clear() { } // Automatically cleared by Picture Loop
     }
 
   #endif // ADVANCED_PAUSE_FEATURE
-
-  #if defined(LULZBOT_SCROLL_LONG_FILE_NAMES)
-    static uint8_t    scroll_offset;
-    static uint8_t    scroll_max;
-    static uint8_t    scroll_hash;
-  #endif
 
   // Set the colors for a menu item based on whether it is selected
   static void lcd_implementation_mark_as_selected(const uint8_t row, const bool isSelected) {

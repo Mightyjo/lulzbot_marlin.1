@@ -130,6 +130,10 @@
   #define DIGIPOT_MOTOR_CURRENT { 135,135,135,135,135 }   // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
 #endif
 
+#ifndef DIGIPOT_MOTOR_CURRENT
+  #define DIGIPOT_MOTOR_CURRENT { 135,135,135,135,135 }   // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
+#endif
+
 //
 // Temperature Sensors
 //
@@ -145,7 +149,6 @@
 //
 // Heaters / Fans
 //
-
 #if defined(LULZBOT_SWAP_EXTRUDERS)
 #define HEATER_0_PIN        7
 #define HEATER_1_PIN        9
@@ -157,10 +160,17 @@
 #define HEATER_2_PIN        6
 #define HEATER_BED_PIN      3
 
-#ifndef FAN_PIN
+#if defined(LULZBOT_EXTRUDER_FAN_ON_PIN_6)
+  #ifndef FAN_PIN
+  #define FAN_PIN           6
+  #endif
+  #define FAN1_PIN          8
+#else
+  #ifndef FAN_PIN
   #define FAN_PIN           8
+  #endif
+  #define FAN1_PIN          6
 #endif
-#define FAN1_PIN            6
 #define FAN2_PIN            2
 
 //
@@ -194,7 +204,9 @@
 //
 #if ENABLED(ULTRA_LCD)
 
+  #if !defined(LULZBOT_DISABLE_KILL_BUTTON)
   #define KILL_PIN         80
+  #endif
 
   #if ENABLED(NEWPANEL)
 

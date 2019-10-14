@@ -77,8 +77,8 @@
  * THERMAL_PROTECTION_HYSTERESIS and/or THERMAL_PROTECTION_PERIOD
  */
 #if ENABLED(THERMAL_PROTECTION_HOTENDS)
-  #define THERMAL_PROTECTION_PERIOD     LULZBOT_THERMAL_PROTECTION_PERIOD        // Seconds
-  #define THERMAL_PROTECTION_HYSTERESIS LULZBOT_THERMAL_PROTECTION_HYSTERESIS    // Degrees Celsius
+  #define THERMAL_PROTECTION_PERIOD LULZBOT_THERMAL_PROTECTION_PERIOD // Seconds
+  #define THERMAL_PROTECTION_HYSTERESIS LULZBOT_THERMAL_PROTECTION_HYSTERESIS // Degrees Celsius
 
   /**
    * Whenever an M104, M109, or M303 increases the target temperature, the
@@ -92,8 +92,8 @@
    * and/or decrease WATCH_TEMP_INCREASE. WATCH_TEMP_INCREASE should not be set
    * below 2.
    */
-  #define WATCH_TEMP_PERIOD   LULZBOT_WATCH_TEMP_PERIOD                // Seconds
-  #define WATCH_TEMP_INCREASE LULZBOT_WATCH_TEMP_INCREASE               // Degrees Celsius
+  #define WATCH_TEMP_PERIOD   LULZBOT_WATCH_TEMP_PERIOD   // Seconds
+  #define WATCH_TEMP_INCREASE LULZBOT_WATCH_TEMP_INCREASE // Degrees Celsius
 #endif
 
 /**
@@ -200,7 +200,7 @@
  */
 #define USE_CONTROLLER_FAN LULZBOT_USE_CONTROLLER_FAN
 #if ENABLED(USE_CONTROLLER_FAN)
-  //#define CONTROLLER_FAN_PIN -1        // Set a custom pin for the controller fan
+  #define CONTROLLER_FAN_PIN LULZBOT_CONTROLLER_FAN_PIN // Set a custom pin for the controller fan
   #define CONTROLLERFAN_SECS 60          // Duration in seconds for the fan to run after all motors are disabled
   #define CONTROLLERFAN_SPEED LULZBOT_CONTROLLERFAN_SPEED // 255 == full speed
 #endif
@@ -222,7 +222,7 @@
  *
  * Define one or both of these to override the default 0-255 range.
  */
-//#define FAN_MIN_PWM 50
+#define FAN_MIN_PWM LULZBOT_FAN_MIN_PWM
 //#define FAN_MAX_PWM 128
 
 // @section extruder
@@ -422,12 +422,12 @@
 #define DEFAULT_MINIMUMFEEDRATE       0.0     // minimum feedrate
 #define DEFAULT_MINTRAVELFEEDRATE     0.0
 
-#define HOME_AFTER_DEACTIVATE LULZBOT_HOME_AFTER_DEACTIVATE  // Require rehoming after steppers are deactivated
+#define HOME_AFTER_DEACTIVATE LULZBOT_HOME_AFTER_DEACTIVATE // Require rehoming after steppers are deactivated
 
 // @section lcd
 
 #if ENABLED(ULTIPANEL)
-  #define MANUAL_FEEDRATE {50*60, 50*60, 4*60, 60} // Feedrates for manual moves along X, Y, Z, E from panel
+  #define MANUAL_FEEDRATE LULZBOT_MANUAL_FEEDRATE // Feedrates for manual moves along X, Y, Z, E from panel
   #define ULTIPANEL_FEEDMULTIPLY  // Comment to disable setting feedrate multiplier via encoder
 #endif
 
@@ -531,7 +531,7 @@
 // @section lcd
 
 // Include a page of printer information in the LCD Main Menu
-//#define LCD_INFO_MENU
+#define LCD_INFO_MENU LULZBOT_LCD_INFO_MENU
 
 // Scroll a longer status message into view
 //#define STATUS_MESSAGE_SCROLLING
@@ -543,7 +543,7 @@
 //#define LCD_TIMEOUT_TO_STATUS 15000
 
 // Add an 'M73' G-code to set the current percentage
-//#define LCD_SET_PROGRESS_MANUALLY
+#define LCD_SET_PROGRESS_MANUALLY LULZBOT_LCD_SET_PROGRESS_MANUALLY
 
 #if ENABLED(SDSUPPORT) || ENABLED(LCD_SET_PROGRESS_MANUALLY)
   //#define LCD_PROGRESS_BAR              // Show a progress bar on HD44780 LCDs for SD printing
@@ -580,10 +580,10 @@
   // as SD_DETECT_PIN in your board's pins definitions.
   // This setting should be disabled unless you are using a push button, pulling the pin to ground.
   // Note: This is always disabled for ULTIPANEL (except ELB_FULL_GRAPHIC_CONTROLLER).
-  #define SD_DETECT_INVERTED
+  //#define SD_DETECT_INVERTED LULZBOT_DISABLE_SD_DETECT_INVERTED
 
   #define SD_FINISHED_STEPPERRELEASE true          // Disable steppers when SD Print is finished
-  #define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E" // You might want to keep the z enabled so your bed stays in place.
+  #define SD_FINISHED_RELEASECOMMAND LULZBOT_SD_FINISHED_RELEASECOMMAND // You might want to keep the z enabled so your bed stays in place.
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
@@ -648,7 +648,7 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
-  //#define SCROLL_LONG_FILENAMES
+  #define SCROLL_LONG_FILENAMES LULZBOT_SCROLL_LONG_FILENAMES
 
   /**
    * This option allows you to abort SD printing when any endstop is triggered.
@@ -721,9 +721,11 @@
      * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
      * This will prevent position updates from being displayed.
      */
-    //#define LIGHTWEIGHT_UI
+    #if defined(LULZBOT_LIGHTWEIGHT_UI)
+     #define LIGHTWEIGHT_UI LULZBOT_LIGHTWEIGHT_UI
+    #endif
     #if ENABLED(LIGHTWEIGHT_UI)
-      #define STATUS_EXPIRE_SECONDS 20
+      #define STATUS_EXPIRE_SECONDS LULZBOT_STATUS_EXPIRE_SECONDS
     #endif
   #endif
 
@@ -756,11 +758,11 @@
   //#define BABYSTEP_XY              // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false    // Change if Z babysteps should go the other way
   #define BABYSTEP_MULTIPLICATOR 1   // Babysteps are very small. Increase for faster motion.
-  #define BABYSTEP_ZPROBE_OFFSET LULZBOT_BABYSTEP_ZPROBE_OFFSET // Enable to combine M851 and Babystepping
+  #define BABYSTEP_ZPROBE_OFFSET LULZBOT_BABYSTEP_ZPROBE_OFFSET  // Enable to combine M851 and Babystepping
   //#define DOUBLECLICK_FOR_Z_BABYSTEPPING // Double-click on the Status Screen for Z Babystepping.
   #define DOUBLECLICK_MAX_INTERVAL 1250 // Maximum interval between clicks, in milliseconds.
                                         // Note: Extra time may be added to mitigate controller latency.
-  //#define BABYSTEP_ZPROBE_GFX_OVERLAY // Enable graphical overlay on Z-offset editor
+  #define BABYSTEP_ZPROBE_GFX_OVERLAY LULZBOT_BABYSTEP_ZPROBE_GFX_OVERLAY // Enable graphical overlay on Z-offset editor
 #endif
 
 // @section extruder
@@ -781,9 +783,11 @@
  * See http://marlinfw.org/docs/features/lin_advance.html for full instructions.
  * Mention @Sebastianv650 on GitHub to alert the author of any issues.
  */
-//#define LIN_ADVANCE
+#if defined(LULZBOT_LIN_ADVANCE)
+#define LIN_ADVANCE LULZBOT_LIN_ADVANCE
+#endif
 #if ENABLED(LIN_ADVANCE)
-  #define LIN_ADVANCE_K 0.22  // Unit: mm compression per 1mm/s extruder speed
+  #define LIN_ADVANCE_K LULZBOT_LIN_ADVANCE_K // Unit: mm compression per 1mm/s extruder speed
   //#define LA_DEBUG          // If enabled, this will generate debug information output over USB.
 #endif
 
@@ -887,7 +891,7 @@
 
 // The ASCII buffer for serial input
 #define MAX_CMD_SIZE 96
-#define BUFSIZE 4
+#define BUFSIZE LULZBOT_BUFSIZE
 
 // Transmission to Host Buffer Size
 // To save 386 bytes of PROGMEM (and TX_BUFFER_SIZE+3 bytes of RAM) set to 0.
@@ -1009,8 +1013,8 @@
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
   //#define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
-  #define ADVANCED_PAUSE_PURGE_FEEDRATE        3  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
-  #define ADVANCED_PAUSE_PURGE_LENGTH         50  // (mm) Length to extrude after loading.
+  #define ADVANCED_PAUSE_PURGE_FEEDRATE  LULZBOT_ADVANCED_PAUSE_PURGE_FEEDRATE // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
+  #define ADVANCED_PAUSE_PURGE_LENGTH LULZBOT_ADVANCED_PAUSE_PURGE_LENGTH // (mm) Length to extrude after loading.
                                                   //   Set to 0 for manual extrusion.
                                                   //   Filament can be extruded repeatedly from the Filament Change menu
                                                   //   until extrusion is consistent, and to purge old filament.
@@ -1020,12 +1024,12 @@
   #define FILAMENT_UNLOAD_DELAY             5000  // (ms) Delay for the filament to cool after retract.
   #define FILAMENT_UNLOAD_PURGE_LENGTH         8  // (mm) An unretract is done, then this length is purged.
 
-  #define PAUSE_PARK_NOZZLE_TIMEOUT           45  // (seconds) Time limit before the nozzle is turned off for safety.
+  #define PAUSE_PARK_NOZZLE_TIMEOUT LULZBOT_PAUSE_PARK_NOZZLE_TIMEOUT // (seconds) Time limit before the nozzle is turned off for safety.
   #define FILAMENT_CHANGE_ALERT_BEEPS         10  // Number of alert beeps to play when a response is needed.
   #define PAUSE_PARK_NO_STEPPER_TIMEOUT           // Enable for XYZ steppers to stay powered on during filament change.
 
-  //#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
-  //#define HOME_BEFORE_FILAMENT_CHANGE           // Ensure homing has been completed prior to parking for filament change
+  #define PARK_HEAD_ON_PAUSE LULZBOT_PARK_HEAD_ON_PAUSE // Park the nozzle during pause and filament change.
+  #define HOME_BEFORE_FILAMENT_CHANGE LULZBOT_HOME_BEFORE_FILAMENT_CHANGE // Ensure homing has been completed prior to parking for filament change
 
   //#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
   //#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
@@ -1110,17 +1114,17 @@
 #if HAS_TRINAMIC
 
   #define R_SENSE LULZBOT_R_SENSE  // R_sense resistor for SilentStepStick2130
-  #define HOLD_MULTIPLIER LULZBOT_HOLD_MULTIPLIER  // Scales down the holding current from run current
+  #define HOLD_MULTIPLIER LULZBOT_HOLD_MULTIPLIER // Scales down the holding current from run current
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
-  #define X_CURRENT LULZBOT_X_CURRENT // rms current in mA. Multiply by 1.41 for peak current.
+  #define X_CURRENT LULZBOT_X_CURRENT  // rms current in mA. Multiply by 1.41 for peak current.
   #define X_MICROSTEPS        16  // 0..256
 
   #define Y_CURRENT LULZBOT_Y_CURRENT
   #define Y_MICROSTEPS        16
 
   #define Z_CURRENT LULZBOT_Z_CURRENT
-  #define Z_MICROSTEPS        LULZBOT_Z_MICROSTEPS
+  #define Z_MICROSTEPS LULZBOT_Z_MICROSTEPS
 
   #define X2_CURRENT         800
   #define X2_MICROSTEPS       16
@@ -1132,7 +1136,7 @@
   #define Z2_MICROSTEPS       16
 
   #define E0_CURRENT LULZBOT_E0_CURRENT
-  #define E0_MICROSTEPS     16
+  #define E0_MICROSTEPS       16
 
   #define E1_CURRENT         800
   #define E1_MICROSTEPS       16
@@ -1189,12 +1193,12 @@
    * STEALTHCHOP needs to be enabled.
    * M913 X/Y/Z/E to live tune the setting
    */
-  #define HYBRID_THRESHOLD       LULZBOT_HYBRID_THRESHOLD
+  #define HYBRID_THRESHOLD LULZBOT_HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     LULZBOT_X_HYBRID_THRESHOLD  // [mm/s]
-  #define X2_HYBRID_THRESHOLD    LULZBOT_X_HYBRID_THRESHOLD
-  #define Y_HYBRID_THRESHOLD     LULZBOT_Y_HYBRID_THRESHOLD
-  #define Y2_HYBRID_THRESHOLD    LULZBOT_Y_HYBRID_THRESHOLD
+  #define X_HYBRID_THRESHOLD LULZBOT_X_HYBRID_THRESHOLD // [mm/s]
+  #define X2_HYBRID_THRESHOLD    100
+  #define Y_HYBRID_THRESHOLD LULZBOT_Y_HYBRID_THRESHOLD
+  #define Y2_HYBRID_THRESHOLD    100
   #define Z_HYBRID_THRESHOLD       3
   #define Z2_HYBRID_THRESHOLD      3
   #define E0_HYBRID_THRESHOLD     30
@@ -1220,9 +1224,9 @@
   #endif
 
   #if ENABLED(SENSORLESS_HOMING)
-    #define X_HOMING_SENSITIVITY  8
-    #define Y_HOMING_SENSITIVITY  8
-    #define Z_HOMING_SENSITIVITY  8
+    #define X_HOMING_SENSITIVITY  LULZBOT_X_HOMING_SENSITIVITY
+    #define Y_HOMING_SENSITIVITY  LULZBOT_Y_HOMING_SENSITIVITY
+    //#define Z_HOMING_SENSITIVITY  LULZBOT_Z_HOMING_SENSITIVITY_DISABLED
   #endif
 
   /**
@@ -1259,7 +1263,7 @@
    *   stepperY.interpolate(0); \
    * }
    */
-  #define TMC_ADV() {  }
+  #define TMC_ADV() LULZBOT_TMC_ADV
 
 #endif // TMC2130 || TMC2208
 
@@ -1535,8 +1539,10 @@
  * Will be sent in the form '//action:ACTION_ON_PAUSE', e.g. '//action:pause'.
  * The host must be configured to handle the action command.
  */
-//#define ACTION_ON_PAUSE "pause"
-//#define ACTION_ON_RESUME "resume"
+#if defined(LULZBOT_ACTION_ON_PAUSE_AND_RESUME)
+#define ACTION_ON_PAUSE "pause"
+#define ACTION_ON_RESUME "resume"
+#endif
 
 //===========================================================================
 //====================== I2C Position Encoder Settings ======================

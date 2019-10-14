@@ -94,7 +94,7 @@
  */
 
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
-//#define SHOW_CUSTOM_BOOTSCREEN
+#define SHOW_CUSTOM_BOOTSCREEN LULZBOT_SHOW_CUSTOM_BOOTSCREEN
 
 // Enable to show the bitmap in Marlin/_Statusscreen.h on the status screen.
 //#define CUSTOM_STATUS_SCREEN_IMAGE
@@ -170,24 +170,20 @@
 #endif
 
 // A dual extruder that uses a single stepper motor
-#if defined(LULZBOT_SWITCHING_EXTRUDER)
-#define SWITCHING_EXTRUDER
-#endif
+//#define SWITCHING_EXTRUDER
 #if ENABLED(SWITCHING_EXTRUDER)
   #define SWITCHING_EXTRUDER_SERVO_NR 0
-  #define SWITCHING_EXTRUDER_SERVO_ANGLES LULZBOT_SWITCHING_SERVO_ANGLES // Angles for E0, E1[, E2, E3]
+  #define SWITCHING_EXTRUDER_SERVO_ANGLES { 0, 90 } // Angles for E0, E1[, E2, E3]
   #if EXTRUDERS > 3
     #define SWITCHING_EXTRUDER_E23_SERVO_NR 1
   #endif
 #endif
 
 // A dual-nozzle that uses a servomotor to raise/lower one of the nozzles
-#if defined(LULZBOT_SWITCHING_NOZZLE)
-#define SWITCHING_NOZZLE LULZBOT_SWITCHING_NOZZLE
-#endif
+//#define SWITCHING_NOZZLE
 #if ENABLED(SWITCHING_NOZZLE)
   #define SWITCHING_NOZZLE_SERVO_NR 0
-  #define SWITCHING_NOZZLE_SERVO_ANGLES LULZBOT_SWITCHING_SERVO_ANGLES // Angles for E0, E1
+  #define SWITCHING_NOZZLE_SERVO_ANGLES { 0, 90 }   // Angles for E0, E1
   //#define HOTEND_OFFSET_Z { 0.0, 0.0 }
 #endif
 
@@ -315,7 +311,7 @@
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
-#define TEMP_SENSOR_BED 0
+#define TEMP_SENSOR_BED LULZBOT_TEMP_SENSOR_BED
 #define TEMP_SENSOR_CHAMBER 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -328,14 +324,14 @@
 #define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
 
 // Extruder temperature must be close to target for this long before M109 returns success
-#define TEMP_RESIDENCY_TIME LULZBOT_TEMP_RESIDENCY_TIME  // (seconds)
-#define TEMP_HYSTERESIS LULZBOT_TEMP_HYSTERESIS       // (degC) range of +/- temperatures considered "close" to the target one
-#define TEMP_WINDOW     LULZBOT_TEMP_WINDOW       // (degC) Window around target to start the residency timer x degC early.
+#define TEMP_RESIDENCY_TIME LULZBOT_TEMP_RESIDENCY_TIME // (seconds)
+#define TEMP_HYSTERESIS LULZBOT_TEMP_HYSTERESIS  // (degC) range of +/- temperatures considered "close" to the target one
+#define TEMP_WINDOW LULZBOT_TEMP_WINDOW // (degC) Window around target to start the residency timer x degC early.
 
 // Bed temperature must be close to target for this long before M190 returns success
-#define TEMP_BED_RESIDENCY_TIME LULZBOT_TEMP_BED_RESIDENCY_TIME  // (seconds)
-#define TEMP_BED_HYSTERESIS LULZBOT_TEMP_BED_HYSTERESIS       // (degC) range of +/- temperatures considered "close" to the target one
-#define TEMP_BED_WINDOW     LULZBOT_TEMP_BED_WINDOW       // (degC) Window around target to start the residency timer x degC early.
+#define TEMP_BED_RESIDENCY_TIME LULZBOT_TEMP_BED_RESIDENCY_TIME // (seconds)
+#define TEMP_BED_HYSTERESIS LULZBOT_TEMP_BED_HYSTERESIS // (degC) range of +/- temperatures considered "close" to the target one
+#define TEMP_BED_WINDOW LULZBOT_TEMP_BED_WINDOW // (degC) Window around target to start the residency timer x degC early.
 
 // The minimal temperature defines the temperature below which the heater will not be enabled It is used
 // to check that the wiring to the thermistor is not broken.
@@ -385,9 +381,9 @@
   #define DEFAULT_Kd LULZBOT_DEFAULT_Kd
 
   // Ultimaker
-  #define DEFAULT_Kp 22.2
-  #define DEFAULT_Ki 1.08
-  #define DEFAULT_Kd 114
+  //#define DEFAULT_Kp 22.2
+  //#define DEFAULT_Ki 1.08
+  //#define DEFAULT_Kd 114
 
   // MakerGear
   //#define DEFAULT_Kp 7.0
@@ -418,7 +414,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED LULZBOT_PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -428,7 +424,7 @@
  * When set to any value below 255, enables a form of PWM to the bed that acts like a divider
  * so don't use it unless you are OK with PWM on your bed. (See the comment on enabling PIDTEMPBED)
  */
-#define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
+#define MAX_BED_POWER LULZBOT_MAX_BED_POWER // limits duty cycle to bed; 255=full current
 
 #if ENABLED(PIDTEMPBED)
 
@@ -441,9 +437,9 @@
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define DEFAULT_bedKp 10.00
-  #define DEFAULT_bedKi .023
-  #define DEFAULT_bedKd 305.4
+  //#define DEFAULT_bedKp 10.00
+  //#define DEFAULT_bedKi .023
+  //#define DEFAULT_bedKd 305.4
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
@@ -517,12 +513,12 @@
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
-#define USE_XMIN_PLUG  LULZBOT_USE_XMIN_PLUG
-#define USE_YMIN_PLUG  LULZBOT_USE_YMIN_PLUG
-#define USE_ZMIN_PLUG  LULZBOT_USE_ZMIN_PLUG
-#define USE_XMAX_PLUG  LULZBOT_USE_XMAX_PLUG
-#define USE_YMAX_PLUG  LULZBOT_USE_YMAX_PLUG
-#define USE_ZMAX_PLUG  LULZBOT_USE_ZMAX_PLUG
+#define USE_XMIN_PLUG LULZBOT_USE_XMIN_PLUG
+#define USE_YMIN_PLUG LULZBOT_USE_YMIN_PLUG
+#define USE_ZMIN_PLUG LULZBOT_USE_ZMIN_PLUG
+#define USE_XMAX_PLUG LULZBOT_USE_XMAX_PLUG
+#define USE_YMAX_PLUG LULZBOT_USE_YMAX_PLUG
+#define USE_ZMAX_PLUG LULZBOT_USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
 #define ENDSTOPPULLUPS
@@ -546,6 +542,28 @@
 #define Z_MAX_ENDSTOP_INVERTING LULZBOT_Z_MAX_ENDSTOP_INVERTING // set to true to invert the logic of the endstop.
 #define Z_MIN_PROBE_ENDSTOP_INVERTING LULZBOT_Z_MIN_PROBE_ENDSTOP_INVERTING // set to true to invert the logic of the probe.
 
+/**
+ * Specify Stepper Driver types
+ * The options are used to determine driver pulse timings as well as more advanced functionality.
+ * Stepper timing options can be overridden in Configuration_adv.h
+ *
+ * Options: A4988, DRV8825, LV8729, L6470, TB6560, TB6600, TMC2100,
+ *          TMC2130, TMC2130_STANDALONE, TMC2208, TMC2208_STANDALONE,
+ *          TMC26X,  TMC26X_STANDALONE,  TMC2660, TMC2660_STANDALONE,
+ *          TMC5130, TMC5130_STANDALONE
+ * :['A4988', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE']
+ */
+#define X_DRIVER_TYPE  LULZBOT_X_DRIVER_TYPE
+#define Y_DRIVER_TYPE  LULZBOT_Y_DRIVER_TYPE
+#define Z_DRIVER_TYPE  LULZBOT_Z_DRIVER_TYPE
+#define X2_DRIVER_TYPE A4988
+#define Y2_DRIVER_TYPE A4988
+#define Z2_DRIVER_TYPE A4988
+#define E0_DRIVER_TYPE LULZBOT_E0_DRIVER_TYPE
+#define E1_DRIVER_TYPE LULZBOT_E1_DRIVER_TYPE
+#define E2_DRIVER_TYPE A4988
+#define E3_DRIVER_TYPE A4988
+#define E4_DRIVER_TYPE A4988
 
 /**
  * Specify Stepper Driver types
@@ -622,7 +640,6 @@
  */
 #define DEFAULT_AXIS_STEPS_PER_UNIT   LULZBOT_DEFAULT_AXIS_STEPS_PER_UNIT
 
-
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
@@ -648,7 +665,7 @@
  */
 #define DEFAULT_ACCELERATION          LULZBOT_DEFAULT_ACCELERATION    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   LULZBOT_DEFAULT_TRAVEL_ACCELERATION // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_TRAVEL_ACCELERATION   LULZBOT_DEFAULT_TRAVEL_ACCELERATION    // X, Y, Z acceleration for travel (non printing) moves
 
 /**
  * Default Jerk (mm/s)
@@ -805,10 +822,10 @@
 #define XY_PROBE_SPEED LULZBOT_XY_PROBE_SPEED
 
 // Feedrate (mm/m) for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
+#define Z_PROBE_SPEED_FAST LULZBOT_Z_PROBE_SPEED_FAST
 
 // Feedrate (mm/m) for the "accurate" probe of each point
-#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
+#define Z_PROBE_SPEED_SLOW LULZBOT_Z_PROBE_SPEED_SLOW
 
 // The number of probes to perform at each point.
 //   Set to 2 for a fast/slow probe, using the second probe result.
@@ -829,12 +846,12 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   10 // Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points
+#define Z_CLEARANCE_DEPLOY_PROBE   LULZBOT_Z_CLEARANCE_DEPLOY_PROBE // Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES  LULZBOT_Z_CLEARANCE_BETWEEN_PROBES // Z Clearance between probe points
 #define Z_CLEARANCE_MULTI_PROBE     5 // Z Clearance between multiple probes
 //#define Z_AFTER_PROBING           5 // Z position after probing is done
 
-#define Z_PROBE_LOW_POINT          -2 // Farthest distance below the trigger-point to go before stopping
+#define Z_PROBE_LOW_POINT LULZBOT_Z_PROBE_LOW_POINT // Farthest distance below the trigger-point to go before stopping
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN LULZBOT_Z_PROBE_OFFSET_RANGE_MIN
@@ -881,7 +898,11 @@
 
 // @section homing
 
-//#define NO_MOTION_BEFORE_HOMING  // Inhibit movement until all axes have been homed
+#if defined(LULZBOT_NO_MOTION_BEFORE_HOMING)
+#define NO_MOTION_BEFORE_HOMING LULZBOT_NO_MOTION_BEFORE_HOMING  // Inhibit movement until all axes have been homed
+#endif
+
+//#define UNKNOWN_Z_NO_RAISE // Don't raise Z (lower the bed) if Z is "unknown." For beds that fall when Z is powered off.
 
 //#define UNKNOWN_Z_NO_RAISE // Don't raise Z (lower the bed) if Z is "unknown." For beds that fall when Z is powered off.
 
@@ -890,9 +911,9 @@
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR LULZBOT_INVERT_X_HOME_DIR
-#define Y_HOME_DIR LULZBOT_INVERT_Y_HOME_DIR
-#define Z_HOME_DIR LULZBOT_INVERT_Z_HOME_DIR
+#define X_HOME_DIR LULZBOT_X_HOME_DIR
+#define Y_HOME_DIR LULZBOT_Y_HOME_DIR
+#define Z_HOME_DIR LULZBOT_Z_HOME_DIR
 
 // @section machine
 
@@ -918,7 +939,9 @@
  */
 
 // Min software endstops constrain movement within minimum coordinate bounds
-#define MIN_SOFTWARE_ENDSTOPS
+#if defined(LULZBOT_MIN_SOFTWARE_ENDSTOPS)
+  #define MIN_SOFTWARE_ENDSTOPS LULZBOT_MIN_SOFTWARE_ENDSTOPS
+#endif
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS)
   #define MIN_SOFTWARE_ENDSTOP_X
   #define MIN_SOFTWARE_ENDSTOP_Y
@@ -1000,7 +1023,6 @@
 #elif defined(LULZBOT_AUTO_BED_LEVELING_BILINEAR)
 #define AUTO_BED_LEVELING_BILINEAR
 #endif
-//#define AUTO_BED_LEVELING_BILINEAR
 //#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
@@ -1008,7 +1030,7 @@
  * Normally G28 leaves leveling disabled on completion. Enable
  * this option to have G28 restore the prior leveling state.
  */
-//#define RESTORE_LEVELING_AFTER_G28
+#define RESTORE_LEVELING_AFTER_G28 LULZBOT_RESTORE_LEVELING_AFTER_G28
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -1049,10 +1071,10 @@
   #define GRID_MAX_POINTS_Y LULZBOT_GRID_MAX_POINTS_Y
 
   // Set the boundaries for probing (where the probe can reach).
-  //#define LEFT_PROBE_BED_POSITION MIN_PROBE_EDGE
-  //#define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - MIN_PROBE_EDGE)
-  //#define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE
-  //#define BACK_PROBE_BED_POSITION (Y_BED_SIZE - MIN_PROBE_EDGE)
+  #define LEFT_PROBE_BED_POSITION LULZBOT_LEFT_PROBE_BED_POSITION
+  #define RIGHT_PROBE_BED_POSITION LULZBOT_RIGHT_PROBE_BED_POSITION
+  #define FRONT_PROBE_BED_POSITION LULZBOT_FRONT_PROBE_BED_POSITION
+  #define BACK_PROBE_BED_POSITION LULZBOT_BACK_PROBE_BED_POSITION
 
   // Probe along the Y axis, advancing X after each column
   #if defined(LULZBOT_PROBE_Y_FIRST)
@@ -1114,12 +1136,12 @@
  * Override if the automatically selected points are inadequate.
  */
 #if ENABLED(AUTO_BED_LEVELING_3POINT) || ENABLED(AUTO_BED_LEVELING_UBL)
-  //#define PROBE_PT_1_X 15
-  //#define PROBE_PT_1_Y 180
-  //#define PROBE_PT_2_X 15
-  //#define PROBE_PT_2_Y 20
-  //#define PROBE_PT_3_X 170
-  //#define PROBE_PT_3_Y 20
+  #define PROBE_PT_1_X LULZBOT_PROBE_PT_1_X
+  #define PROBE_PT_1_Y LULZBOT_PROBE_PT_1_Y
+  #define PROBE_PT_2_X LULZBOT_PROBE_PT_2_X
+  #define PROBE_PT_2_Y LULZBOT_PROBE_PT_2_Y
+  #define PROBE_PT_3_X LULZBOT_PROBE_PT_3_X
+  #define PROBE_PT_3_Y LULZBOT_PROBE_PT_3_Y
 #endif
 
 /**
@@ -1173,8 +1195,8 @@
 #endif
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT LULZBOT_Z_SAFE_HOMING_X_POINT    // X point for Z homing when homing all axes (G28).
-  #define Z_SAFE_HOMING_Y_POINT LULZBOT_Z_SAFE_HOMING_Y_POINT    // Y point for Z homing when homing all axes (G28).
+  #define Z_SAFE_HOMING_X_POINT LULZBOT_Z_SAFE_HOMING_X_POINT // X point for Z homing when homing all axes (G28).
+  #define Z_SAFE_HOMING_Y_POINT LULZBOT_Z_SAFE_HOMING_Y_POINT // Y point for Z homing when homing all axes (G28).
 #endif
 
 // Homing speeds (mm/m)
@@ -1262,7 +1284,7 @@
 // When enabled Marlin will send a busy status message to the host
 // every couple of seconds when it can't accept commands.
 //
-//#define HOST_KEEPALIVE_FEATURE LULZBOT_HOST_KEEPALIVE_FEATURE_DISABLED        // Disable this if your host doesn't like keepalive messages
+//#define HOST_KEEPALIVE_FEATURE LULZBOT_HOST_KEEPALIVE_FEATURE_DISABLED // Disable this if your host doesn't like keepalive messages
 #define DEFAULT_KEEPALIVE_INTERVAL 2  // Number of seconds between "busy" messages. Set with M113.
 #define BUSY_WHILE_HEATING            // Some hosts require "busy" messages even during heating
 
@@ -1307,7 +1329,7 @@
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z }
-  #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MAX_POS - 10), 20 }
+  #define NOZZLE_PARK_POINT LULZBOT_NOZZLE_PARK_POINT
   #define NOZZLE_PARK_XY_FEEDRATE 100   // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
   #define NOZZLE_PARK_Z_FEEDRATE 5      // Z axis feedrate in mm/s (not used for delta printers)
 #endif
@@ -1371,7 +1393,9 @@
   #define NOZZLE_CLEAN_CIRCLE_MIDDLE NOZZLE_CLEAN_START_POINT
 
   // Moves the nozzle to the initial position
-  #define NOZZLE_CLEAN_GOBACK
+  #if defined(LULZBOT_NOZZLE_CLEAN_GOBACK)
+    #define NOZZLE_CLEAN_GOBACK
+  #endif
 #endif
 
 /**
@@ -1389,7 +1413,7 @@
  *   M76 - Pause the print job timer
  *   M77 - Stop the print job timer
  */
-#define PRINTJOB_TIMER_AUTOSTART
+//#define PRINTJOB_TIMER_AUTOSTART LULZBOT_PRINTJOB_TIMER_AUTOSTART_DISABLED
 
 /**
  * Print Counter
@@ -1687,7 +1711,7 @@
 // RepRapDiscount FULL GRAPHIC Smart Controller
 // http://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
-//#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER LULZBOT_REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
 //
 // ReprapWorld Graphical LCD
@@ -1910,11 +1934,11 @@
 #endif
 
 // Support for Adafruit Neopixel LED driver
-#define NEOPIXEL_LED LULZBOT_NEOPIXEL_RGBW_LED
+//#define NEOPIXEL_LED
 #if ENABLED(NEOPIXEL_LED)
   #define NEOPIXEL_TYPE   NEO_GRBW // NEO_GRBW / NEO_GRB - four/three channel driver type (defined in Adafruit_NeoPixel.h)
-  #define NEOPIXEL_PIN    LULZBOT_NEOPIXEL_PIN        // LED driving pin on motherboard 4 => D4 (EXP2-5 on Printrboard) / 30 => PC7 (EXP3-13 on Rumba)
-  #define NEOPIXEL_PIXELS LULZBOT_NEOPIXEL_PIXELS       // Number of LEDs in the strip
+  #define NEOPIXEL_PIN    4        // LED driving pin on motherboard 4 => D4 (EXP2-5 on Printrboard) / 30 => PC7 (EXP3-13 on Rumba)
+  #define NEOPIXEL_PIXELS 30       // Number of LEDs in the strip
   #define NEOPIXEL_IS_SEQUENTIAL   // Sequential display for temperature change - LED by LED. Disable to change all LEDs at once.
   #define NEOPIXEL_BRIGHTNESS 127  // Initial brightness (0-255)
   //#define NEOPIXEL_STARTUP_TEST  // Cycle through colors at startup
@@ -1947,9 +1971,7 @@
  * Set this manually if there are extra servos needing manual control.
  * Leave undefined or set to 0 to entirely disable the servo subsystem.
  */
-#if defined(LULZBOT_NUM_SERVOS)
-#define NUM_SERVOS LULZBOT_NUM_SERVOS // Servo index starts with 0 for M280 command
-#endif
+//#define NUM_SERVOS 3 // Servo index starts with 0 for M280 command
 
 // Delay (in milliseconds) before the next move will start, to give the servo time to reach its target angle.
 // 300ms is a good value but you can try less delay.

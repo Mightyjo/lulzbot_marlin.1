@@ -26,8 +26,6 @@
 #include <U8glib.h>
 #include "delay.h"
 
-LULZBOT_LCD_CLEAR_DECL
-
 #define ST7920_CLK_PIN  LCD_PINS_D4
 #define ST7920_DAT_PIN  LCD_PINS_ENABLE
 #define ST7920_CS_PIN   LCD_PINS_RS
@@ -55,7 +53,7 @@ LULZBOT_LCD_CLEAR_DECL
   #define CPU_ST7920_DELAY_1 DELAY_NS(0)
   #define CPU_ST7920_DELAY_2 DELAY_NS(188)
   #define CPU_ST7920_DELAY_3 DELAY_NS(0)
-#elif MB(MINIRAMBO)
+#elif MB(MINIRAMBO) || MB(EINSY_RETRO)
   #define CPU_ST7920_DELAY_1 DELAY_NS(0)
   #define CPU_ST7920_DELAY_2 DELAY_NS(250)
   #define CPU_ST7920_DELAY_3 DELAY_NS(0)
@@ -141,7 +139,6 @@ uint8_t u8g_dev_rrd_st7920_128x64_fn(u8g_t *u8g, u8g_dev_t *dev, uint8_t msg, vo
         ST7920_SET_CMD();
       }
       ST7920_WRITE_BYTE(0x0C); //display on, cursor+blink off
-      LULZBOT_LCD_CLEAR
       ST7920_NCS();
     }
     break;

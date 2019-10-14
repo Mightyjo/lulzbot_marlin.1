@@ -107,10 +107,6 @@
 /**
  * Defines for 8.3 and long (vfat) filenames
  */
-  #if defined(LULZBOT_SCROLL_LONG_FILE_NAMES)
-  #define MAX_VFAT_ENTRIES (5)
-  #else
-  #endif
 
 #define FILENAME_LENGTH 13 // Number of UTF-16 characters per entry
 

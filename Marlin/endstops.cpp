@@ -356,7 +356,6 @@ void Endstops::M119() {
     SERIAL_PROTOCOLPGM(MSG_FILAMENT_RUNOUT_SENSOR);
     SERIAL_PROTOCOLLN(((READ(FIL_RUNOUT_PIN)^FIL_RUNOUT_INVERTING) ? MSG_ENDSTOP_HIT : MSG_ENDSTOP_OPEN));
   #endif
-  LULZBOT_TMC_M119_REPORT
 } // Endstops::M119
 
 // The following routines are called from an ISR context. It could be the temperature ISR, the
@@ -607,7 +606,7 @@ void Endstops::update() {
         #if ENABLED(Z_DUAL_ENDSTOPS)
           PROCESS_DUAL_ENDSTOP(Z, Z2, MIN);
         #else
-          #if ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
+          #if ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN) || defined(LULZBOT_Z_MIN_USES_Z_PROBE_ENABLED)
             if (z_probe_enabled) PROCESS_ENDSTOP(Z, MIN);
           #elif ENABLED(Z_MIN_PROBE_ENDSTOP)
             if (!z_probe_enabled) PROCESS_ENDSTOP(Z, MIN);
