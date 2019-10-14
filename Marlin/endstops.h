@@ -29,8 +29,6 @@
 
 #include "MarlinConfig.h"
 
-#define VALIDATE_HOMING_ENDSTOPS
-
 enum EndstopEnum : char {
   X_MIN,
   Y_MIN,
@@ -145,12 +143,8 @@ class Endstops {
     // Disable / Enable endstops based on ENSTOPS_ONLY_FOR_HOMING and global enable
     static void not_homing();
 
-    #if ENABLED(VALIDATE_HOMING_ENDSTOPS)
-      // If the last move failed to trigger an endstop, call kill
-      static void validate_homing_move();
-    #else
-      FORCE_INLINE static void validate_homing_move() { hit_on_purpose(); }
-    #endif
+    // If the last move failed to trigger an endstop, call kill
+    static void validate_homing_move();
 
     // Clear endstops (i.e., they were hit intentionally) to suppress the report
     FORCE_INLINE static void hit_on_purpose() { hit_state = 0; }

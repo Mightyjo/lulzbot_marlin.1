@@ -45,7 +45,5 @@
 
 //#define LULZBOT_Oliveoil_TAZ6
 //#define TOOLHEAD_Tilapia_SingleExtruder
-#define LULZBOT_Juniper_TAZ5
-#define TOOLHEAD_Tilapia_SingleExtruder
 
 #endif /* CONFIGURATION_LULZBOT */

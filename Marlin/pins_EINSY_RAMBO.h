@@ -118,10 +118,7 @@
 #ifndef FAN_PIN
   #define FAN_PIN           8
 #endif
-
-#ifndef FAN1_PIN
-  #define FAN1_PIN          6
-#endif
+#define FAN1_PIN            6
 
 //
 // Misc. Functions
