@@ -2225,23 +2225,6 @@ void MarlinSettings::reset() {
           SERIAL_ECHOPAIR("EEPROM can hold ", calc_num_meshes());
           SERIAL_ECHOLNPGM(" meshes.\n");
         }
-    
-//      ubl.report_current_mesh(PORTVAR_SOLO);   // This is too verbose for large mesh's.   A better (more terse)
-                                                 // solution needs to be found.
-      #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
-
-        if (leveling_is_valid()) {
-          for (uint8_t py = 0; py < GRID_MAX_POINTS_Y; py++) {
-            for (uint8_t px = 0; px < GRID_MAX_POINTS_X; px++) {
-              CONFIG_ECHO_START;
-              SERIAL_ECHOPAIR("  G29 W I", (int)px);
-              SERIAL_ECHOPAIR(" J", (int)py);
-              SERIAL_ECHOPGM(" Z");
-              SERIAL_ECHO_F(LINEAR_UNIT(z_values[px][py]), 5);
-              SERIAL_EOL();
-            }
-          }
-        }
 
 //      ubl.report_current_mesh(PORTVAR_SOLO);   // This is too verbose for large mesh's.   A better (more terse)
                                                  // solution needs to be found.

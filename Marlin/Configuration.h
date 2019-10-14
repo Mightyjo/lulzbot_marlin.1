@@ -565,29 +565,6 @@
 #define E3_DRIVER_TYPE A4988
 #define E4_DRIVER_TYPE A4988
 
-/**
- * Specify Stepper Driver types
- * The options are used to determine driver pulse timings as well as more advanced functionality.
- * Stepper timing options can be overridden in Configuration_adv.h
- *
- * Options: A4988, DRV8825, LV8729, L6470, TB6560, TB6600, TMC2100,
- *          TMC2130, TMC2130_STANDALONE, TMC2208, TMC2208_STANDALONE,
- *          TMC26X,  TMC26X_STANDALONE,  TMC2660, TMC2660_STANDALONE,
- *          TMC5130, TMC5130_STANDALONE
- * :['A4988', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE']
- */
-#define X_DRIVER_TYPE  A4988
-#define Y_DRIVER_TYPE  A4988
-#define Z_DRIVER_TYPE  A4988
-#define X2_DRIVER_TYPE A4988
-#define Y2_DRIVER_TYPE A4988
-#define Z2_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE A4988
-#define E1_DRIVER_TYPE A4988
-#define E2_DRIVER_TYPE A4988
-#define E3_DRIVER_TYPE A4988
-#define E4_DRIVER_TYPE A4988
-
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
 #if defined(LULZBOT_ENDSTOP_INTERRUPTS_FEATURE)
@@ -904,9 +881,7 @@
 
 //#define UNKNOWN_Z_NO_RAISE // Don't raise Z (lower the bed) if Z is "unknown." For beds that fall when Z is powered off.
 
-//#define UNKNOWN_Z_NO_RAISE // Don't raise Z (lower the bed) if Z is "unknown." For beds that fall when Z is powered off.
-
-//#define Z_HOMING_HEIGHT 4  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
+#define Z_HOMING_HEIGHT LULZBOT_Z_HOMING_HEIGHT  // (in mm) Minimal z height before homing (G28) for Z clearance above the bed, clamps, ...
                              // Be sure you have this distance over your Z_MAX_POS in case.
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
@@ -1513,13 +1488,13 @@
 // This option overrides the default number of encoder pulses needed to
 // produce one step. Should be increased for high-resolution encoders.
 //
-//#define ENCODER_PULSES_PER_STEP 4
+#define ENCODER_PULSES_PER_STEP LULZBOT_ENCODER_PULSES_PER_STEP
 
 //
 // Use this option to override the number of step signals required to
 // move between next/prev menu items.
 //
-//#define ENCODER_STEPS_PER_MENU_ITEM 1
+#define ENCODER_STEPS_PER_MENU_ITEM LULZBOT_ENCODER_STEPS_PER_MENU_ITEM
 
 /**
  * Encoder Direction Options

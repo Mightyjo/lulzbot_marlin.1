@@ -6921,13 +6921,8 @@ inline void gcode_M17() {
         card.pauseSDPrint();
         ++did_pause_print; // Indicate SD pause also
       }
-      KEEPALIVE_STATE(IN_HANDLER);
-    }
-
-    #if ENABLED(ULTIPANEL)
-      if (show_lcd) // Show "wait for load" message
-        lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_LOAD, mode);
     #endif
+    print_job_timer.pause();
 
     // Save current position
     COPY(resume_position, current_position);
@@ -6970,71 +6965,11 @@ inline void gcode_M17() {
       filament_change_beep(max_beep_count, true);
     #endif
 
-    return true;
-  }
+    // Start the heater idle timers
+    const millis_t nozzle_timeout = (millis_t)(PAUSE_PARK_NOZZLE_TIMEOUT) * 1000UL;
 
-  /**
-   * Pause procedure
-   *
-   * - Abort if already paused
-   * - Send host action for pause, if configured
-   * - Abort if TARGET temperature is too low
-   * - Display "wait for start of filament change" (if a length was specified)
-   * - Initial retract, if current temperature is hot enough
-   * - Park the nozzle at the given position
-   * - Call unload_filament (if a length was specified)
-   *
-   * Returns 'true' if pause was completed, 'false' for abort
-   */
-  static bool pause_print(const float &retract, const point_t &park_point, const float &unload_length=0, const bool show_lcd=false) {
-    if (did_pause_print) return false; // already paused
-
-    #ifdef ACTION_ON_PAUSE
-      SERIAL_ECHOLNPGM("//action:" ACTION_ON_PAUSE);
-    #endif
-
-    if (!DEBUGGING(DRYRUN) && unload_length && thermalManager.targetTooColdToExtrude(active_extruder)) {
-      SERIAL_ERROR_START();
-      SERIAL_ERRORLNPGM(MSG_HOTEND_TOO_COLD);
-
-      #if ENABLED(ULTIPANEL)
-        if (show_lcd) // Show status screen
-          lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_STATUS);
-        LCD_MESSAGEPGM(MSG_M600_TOO_COLD);
-      #endif
-
-      return false; // unable to reach safe temperature
-    }
-
-    // Indicate that the printer is paused
-    ++did_pause_print;
-
-    // Pause the print job and timer
-    #if ENABLED(SDSUPPORT)
-      if (card.sdprinting) {
-        card.pauseSDPrint();
-        ++did_pause_print; // Indicate SD pause also
-      }
-    #endif
-    print_job_timer.pause();
-
-    // Save current position
-    COPY(resume_position, current_position);
-
-    // Wait for synchronize steppers
-    planner.synchronize();
-
-    // Initial retract before move to filament change position
-    if (retract && thermalManager.hotEnoughToExtrude(active_extruder))
-      do_pause_e_move(retract, PAUSE_PARK_RETRACT_FEEDRATE);
-
-    // Park the nozzle by moving up by z_lift and then moving to (x_pos, y_pos)
-    if (!axis_unhomed_error())
-      Nozzle::park(2, park_point);
-
-    // Unload the filament
-    if (unload_length)
-      unload_filament(unload_length, show_lcd);
+    HOTEND_LOOP()
+      thermalManager.start_heater_idle_timer(e, nozzle_timeout);
 
     // Wait for filament insert by user and press button
     KEEPALIVE_STATE(PAUSED_FOR_USER);

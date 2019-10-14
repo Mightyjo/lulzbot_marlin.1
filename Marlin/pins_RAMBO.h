@@ -125,9 +125,10 @@
 #endif
 
 #define DIGIPOTSS_PIN      38
-#define DIGIPOT_CHANNELS  { 4,5,3,0,1 }   // X Y Z E0 E1 digipot channels to stepper driver mapping
-#ifndef DIGIPOT_MOTOR_CURRENT
-  #define DIGIPOT_MOTOR_CURRENT { 135,135,135,135,135 }   // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
+#if defined(LULZBOT_SWAP_EXTRUDERS)
+#define DIGIPOT_CHANNELS {4,5,3,1,0} // X Y Z E0 E1 digipot channels to stepper driver mapping
+#else
+#define DIGIPOT_CHANNELS {4,5,3,0,1} // X Y Z E0 E1 digipot channels to stepper driver mapping
 #endif
 
 #ifndef DIGIPOT_MOTOR_CURRENT
