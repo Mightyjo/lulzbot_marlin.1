@@ -472,6 +472,10 @@ uint16_t max_display_update_time = 0;
     constexpr bool processing_manual_move = false;
   #endif
 
+  #if defined(LULZBOT_LCD_MANUAL_EXTRUDE_RELATIVE)
+    float manual_move_e_origin = 0;
+  #endif
+
   #if PIN_EXISTS(SD_DETECT)
     uint8_t lcd_sd_status;
   #endif
@@ -3252,6 +3256,9 @@ void lcd_quick_feedback(const bool clear_buttons) {
         #if IS_KINEMATIC
           + manual_move_offset
         #endif
+        #if defined(LULZBOT_LCD_MANUAL_EXTRUDE_RELATIVE)
+          - manual_move_e_origin
+        #endif
       ));
     }
   }
@@ -3300,7 +3307,11 @@ void lcd_quick_feedback(const bool clear_buttons) {
         case Z_AXIS:
           STATIC_ITEM(MSG_MOVE_Z, true, true); break;
         default:
-          STATIC_ITEM(MSG_MOVE_E, true, true); break;
+          STATIC_ITEM(MSG_MOVE_E, true, true);
+          #if defined(LULZBOT_LCD_MANUAL_EXTRUDE_RELATIVE)
+            manual_move_e_origin = current_position[E_AXIS];
+          #endif
+          break;
       }
     }
     MENU_BACK(MSG_MOVE_AXIS);
@@ -4474,6 +4485,17 @@ void lcd_quick_feedback(const bool clear_buttons) {
       return PSTR(MSG_FILAMENTCHANGE);
     }
 
+    #if defined(LULZBOT_SHOW_TEMPERATURE_ADJUSTMENT_IN_PREHEAT_MENU)
+    void _change_filament_temp(const uint16_t temperature) {
+      char cmd[11];
+      sprintf_P(cmd, _change_filament_temp_command(), _change_filament_temp_extruder);
+      thermalManager.setTargetHotend(temperature, _change_filament_temp_extruder);
+      lcd_enqueue_command(cmd);
+    }
+    void _lcd_change_filament_temp_1_menu()      {_change_filament_temp(PREHEAT_1_TEMP_HOTEND); }
+    void _lcd_change_filament_temp_2_menu()      {_change_filament_temp(PREHEAT_2_TEMP_HOTEND); }
+    void _lcd_change_filament_temp_custom_menu() {_change_filament_temp(thermalManager.target_temperature[_change_filament_temp_extruder]);}
+    #else
     void _change_filament_temp(const uint8_t index) {
       char cmd[11];
       sprintf_P(cmd, _change_filament_temp_command(), _change_filament_temp_extruder);
@@ -4482,6 +4504,7 @@ void lcd_quick_feedback(const bool clear_buttons) {
     }
     void _lcd_change_filament_temp_1_menu() { _change_filament_temp(1); }
     void _lcd_change_filament_temp_2_menu() { _change_filament_temp(2); }
+    #endif
 
     static const char* change_filament_header(const AdvancedPauseMode mode) {
       switch (mode) {
@@ -4499,9 +4522,12 @@ void lcd_quick_feedback(const bool clear_buttons) {
       _change_filament_temp_extruder = extruder;
       START_MENU();
       if (LCD_HEIGHT >= 4) STATIC_ITEM_P(change_filament_header(mode), true, true);
-      MENU_BACK(MSG_FILAMENTCHANGE);
+      MENU_BACK(LULZBOT_FILAMENT_CHANGE_MSG_BACK);
       MENU_ITEM(submenu, MSG_PREHEAT_1, _lcd_change_filament_temp_1_menu);
       MENU_ITEM(submenu, MSG_PREHEAT_2, _lcd_change_filament_temp_2_menu);
+      #if defined(LULZBOT_SHOW_TEMPERATURE_ADJUSTMENT_IN_PREHEAT_MENU)
+        MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(int3, _UxGT("Preheat Custom"), &thermalManager.target_temperature[_change_filament_temp_extruder], EXTRUDE_MINTEMP, HEATER_0_MAXTEMP - 15, _lcd_change_filament_temp_custom_menu);
+      #endif
       END_MENU();
     }
     void lcd_temp_menu_e0_filament_change()  { _lcd_temp_menu_filament_op(ADVANCED_PAUSE_MODE_PAUSE_PRINT, 0); }

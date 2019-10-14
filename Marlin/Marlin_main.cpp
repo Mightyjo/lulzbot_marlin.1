@@ -2283,8 +2283,8 @@ void clean_up_after_endstop_or_probe_move() {
 
     // Double-probing does a fast probe followed by a slow probe
     #if MULTIPLE_PROBING == 2
-
       // Do a first probe at the fast speed
+      #ifndef LULZBOT_DO_PROBE_MOVE
       if (do_probe_move(z_probe_low_point, MMM_TO_MMS(Z_PROBE_SPEED_FAST))) {
         #if ENABLED(DEBUG_LEVELING_FEATURE)
           if (DEBUGGING(LEVELING)) {
@@ -2294,6 +2294,9 @@ void clean_up_after_endstop_or_probe_move() {
         #endif
         return NAN;
       }
+      #else
+      LULZBOT_DO_PROBE_MOVE(Z_PROBE_SPEED_FAST);
+      #endif
 
       float first_probe_z = current_position[Z_AXIS];
 
@@ -2324,7 +2327,8 @@ void clean_up_after_endstop_or_probe_move() {
     #endif
 
         // move down slowly to find bed
-        /*if (do_probe_move(z_probe_low_point, MMM_TO_MMS(Z_PROBE_SPEED_SLOW))) {
+        #ifndef LULZBOT_DO_PROBE_MOVE
+        if (do_probe_move(z_probe_low_point, MMM_TO_MMS(Z_PROBE_SPEED_SLOW))) {
           #if ENABLED(DEBUG_LEVELING_FEATURE)
             if (DEBUGGING(LEVELING)) {
               SERIAL_ECHOLNPGM("SLOW Probe fail!");
@@ -2332,8 +2336,10 @@ void clean_up_after_endstop_or_probe_move() {
             }
           #endif
           return NAN;
-        }*/
+        }
+        #else
         LULZBOT_DO_PROBE_MOVE(Z_PROBE_SPEED_SLOW);
+        #endif
         LULZBOT_BACKLASH_MEASUREMENT
 
     #if MULTIPLE_PROBING > 2
@@ -4276,8 +4282,11 @@ inline void gcode_G28(const bool always_home_all) {
 
   #endif // !DELTA (gcode_G28)
 
-  LULZBOT_AFTER_Z_HOME_ACTION // This must happen before endstops.not_homing()
+  #if ENABLED(ULTRA_LCD) && defined(LULZBOT_HOMING_MESSAGE_WORKAROUND)
+    lcd_reset_status();
+  #endif
 
+  LULZBOT_BACKOFF_AFTER_HOME // This must happen before endstops.not_homing()
   endstops.not_homing();
 
   #if ENABLED(DELTA) && ENABLED(DELTA_HOME_TO_SAFE_ZONE)
@@ -6849,6 +6858,10 @@ inline void gcode_M17() {
         lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_UNLOAD, mode);
     #endif
 
+    #if defined(LULZBOT_AEROSTRUDER_UNLOAD_WORKAROUND)
+    // Retract filament
+    do_pause_e_move(LULZBOT_AEROSTRUDER_UNLOAD_PURGE_LENGTH, LULZBOT_AEROSTRUDER_UNLOAD_PURGE_FEEDRATE);
+    #else
     // Retract filament
     do_pause_e_move(-FILAMENT_UNLOAD_RETRACT_LENGTH, PAUSE_PARK_RETRACT_FEEDRATE);
 
@@ -6857,6 +6870,7 @@ inline void gcode_M17() {
 
     // Quickly purge
     do_pause_e_move(FILAMENT_UNLOAD_RETRACT_LENGTH + FILAMENT_UNLOAD_PURGE_LENGTH, planner.max_feedrate_mm_s[E_AXIS]);
+    #endif
 
     // Unload filament
     #if FILAMENT_CHANGE_FAST_LOAD_ACCEL > 0
@@ -7056,7 +7070,11 @@ inline void gcode_M17() {
    * - Send host action for resume, if configured
    * - Resume the current SD print job, if any
    */
+  #if defined(LULZBOT_ADVANCED_PAUSE_PURGE_WORKAROUND)
+  static void resume_print(const float &slow_load_length=0, const float &fast_load_length=0, const float &purge_length=0, const int8_t max_beep_count=0) {
+  #else
   static void resume_print(const float &slow_load_length=0, const float &fast_load_length=0, const float &purge_length=ADVANCED_PAUSE_PURGE_LENGTH, const int8_t max_beep_count=0) {
+  #endif
     if (!did_pause_print) return;
 
     // Re-enable the heaters if they timed out
@@ -7066,6 +7084,9 @@ inline void gcode_M17() {
       thermalManager.reset_heater_idle_timer(e);
     }
 
+    #if defined(LULZBOT_ADVANCED_PAUSE_PURGE_WORKAROUND)
+    if(purge_length)
+    #endif
     if (nozzle_timed_out || thermalManager.hotEnoughToExtrude(active_extruder)) {
       // Load the new filament
       load_filament(slow_load_length, fast_load_length, purge_length, max_beep_count, true, nozzle_timed_out);
@@ -7116,6 +7137,10 @@ inline void gcode_M17() {
         card.startFileprint();
         --did_pause_print;
       }
+    #endif
+
+    #if ENABLED(ULTRA_LCD) && defined(LULZBOT_PAUSED_MESSAGE_WORKAROUND)
+      lcd_reset_status();
     #endif
   }
 
@@ -8160,7 +8185,7 @@ inline void gcode_M109() {
       const bool heating = thermalManager.isHeatingHotend(target_extruder);
       if (heating || !no_wait_for_cooling)
         #if HOTENDS > 1
-          lcd_status_printf_P(0, heating ? PSTR(LULZBOT_EXTRUDER_STR "%i " MSG_HEATING) : PSTR(LULZBOT_EXTRUDER_STR "%i " MSG_COOLING), target_extruder + 1);
+          lcd_status_printf_P(0, heating ? PSTR(LULZBOT_EXTRUDER_STR " %i " MSG_HEATING) : PSTR(LULZBOT_EXTRUDER_STR " %i " MSG_COOLING), target_extruder + 1);
         #else
           lcd_setstatusPGM(heating ? PSTR(LULZBOT_EXTRUDER_STR " " MSG_HEATING) : PSTR(LULZBOT_EXTRUDER_STR " " MSG_COOLING));
         #endif
@@ -12406,6 +12431,8 @@ void process_parsed_command(
 
       #if ENABLED(ULTRA_LCD) && ENABLED(LCD_SET_PROGRESS_MANUALLY)
         case 73: gcode_M73(); break;                              // M73: Set Print Progress %
+      #else
+        case 73: break;
       #endif
       case 75: gcode_M75(); break;                                // M75: Start Print Job Timer
       case 76: gcode_M76(); break;                                // M76: Pause Print Job Timer
@@ -14783,6 +14810,9 @@ void loop() {
         wait_for_heatup = false;
         #if ENABLED(POWER_LOSS_RECOVERY)
           card.removeJobRecoveryFile();
+        #endif
+        #if defined(LULZBOT_AFTER_ABORT_PRINT_ACTION)
+          LULZBOT_AFTER_ABORT_PRINT_ACTION
         #endif
       }
     #endif
